@@ -1,5 +1,7 @@
 # The Pawn embedded scripting language
 
+> **Nota Bene**: This project has moved to Codeberg, see https://codeberg.org/compuphase/pawn
+
 Pawn is a simple, typeless, 32-bit extension language with a C-like syntax.
 The Pawn compiler outputs P-code (or bytecode) that subsequently runs on an
 abstract machine. Execution speed, stability, simplicity and a small footprint
