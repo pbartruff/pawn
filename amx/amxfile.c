@@ -710,13 +710,20 @@ static cell AMX_NATIVE_CALL n_fremove(AMX *amx, const cell *params)
   amx_StrParam(amx,params[1],name);
   if (name!=NULL && completename(fullname,name,sizearray(fullname))!=NULL) {
     /* if this is a directory, try _trmdir() */
-    #if defined _WIN64
+/*     #if defined _WIN64
       struct __stat64 stbuf;
       _tstat64(fullname, &stbuf);
     #else
       struct t_stat stbuf;
       _tstat(fullname, &stbuf);
-    #endif
+    #endif */
+    #ifdef _WIN32
+      struct _stat64 stbuf;
+      _stat64(fullname, &stbuf);
+    #else
+      struct stat stbuf;
+      stat(fullname, &stbuf);
+    #endif   
     if (S_ISDIR(stbuf.st_mode))
       r=_trmdir(fullname);
     else
@@ -886,13 +893,21 @@ static cell AMX_NATIVE_CALL n_fstat(AMX *amx, const cell *params)
   amx_StrParam(amx,params[1],name);
   if (name!=NULL && completename(fullname,name,sizearray(fullname))!=NULL) {
     int err;
-    #if defined _WIN64
+    /*#if defined _WIN64
       struct __stat64 stbuf;
       err = _tstat64(fullname, &stbuf);
     #else
       struct t_stat stbuf;
       err = _tstat(fullname, &stbuf);
-    #endif
+    #endif*/
+    #ifdef _WIN32
+      struct _stat64 stbuf;
+      err = _stat64(fullname, &stbuf);
+    #else
+      struct stat stbuf;
+      err = _stat64(fullname, &stbuf);
+    #endif   
+ 
     if (err == 0) {
       cptr=amx_Address(amx,params[2]);
       *cptr=(cell)stbuf.st_size;
